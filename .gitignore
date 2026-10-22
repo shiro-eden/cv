@@ -1,0 +1,10 @@
+# Kotlin Toolchain / Amper build outputs
+build/
+.kotlin/
+
+# IDE
+.idea/
+*.iml
+
+# OS
+.DS_Store

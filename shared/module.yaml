@@ -1,0 +1,17 @@
+product:
+  type: kmp/lib
+  platforms: [wasmJs]
+
+dependencies:
+  - $compose.runtime
+  - $compose.foundation
+  - $compose.material3
+  - $compose.ui
+  - $compose.components.resources
+
+settings:
+  compose:
+    enabled: true
+    resources:
+      packageName: org.example.cv.resources
+      exposedAccessors: true
