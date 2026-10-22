@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 /**
@@ -166,5 +167,16 @@ private fun ProjectDetailsCard(
                 }
             }
         }
+    }
+}
+
+@Preview(widthDp = 1280, heightDp = 800)
+@Composable
+private fun ProjectDetailsOverlayPreview() {
+    CvTheme {
+        ProjectDetailsOverlay(
+            project = cvProfile.projects.first(),
+            onDismiss = {},
+        )
     }
 }

@@ -1,0 +1,13 @@
+product: android/app
+
+dependencies:
+  - //shared
+  - androidx.activity:activity-compose:1.13.0
+  - $compose.preview
+  - $compose.uiTooling
+
+settings:
+  compose: enabled
+  android:
+    namespace: org.example.cv
+    applicationId: org.example.cv

@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 /** Аннотация ссылки в AnnotatedString. */
@@ -228,6 +229,17 @@ private fun CodeBlock(code: String) {
                 .fillMaxWidth()
                 .horizontalScroll(rememberScrollState())
                 .padding(12.dp),
+        )
+    }
+}
+
+@Preview(widthDp = 480, heightDp = 700, showBackground = true)
+@Composable
+private fun MarkdownTextPreview() {
+    CvTheme {
+        MarkdownText(
+            markdown = cvProfile.projects.first().readme,
+            modifier = Modifier.padding(16.dp),
         )
     }
 }

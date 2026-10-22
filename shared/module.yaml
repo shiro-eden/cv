@@ -1,6 +1,6 @@
 product:
   type: kmp/lib
-  platforms: [wasmJs]
+  platforms: [wasmJs, android]
 
 dependencies:
   - $compose.runtime
@@ -8,6 +8,11 @@ dependencies:
   - $compose.material3
   - $compose.ui
   - $compose.components.resources
+  - $compose.preview
+  - $compose.hotReload.runtimeApi
+
+dependencies@android:
+  - $compose.uiTooling
 
 settings:
   compose:
