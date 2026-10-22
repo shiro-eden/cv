@@ -2,47 +2,80 @@ package org.example.cv
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+/** Сколько цветовых «слотов» чередуется между значками. */
+private const val COLOR_SLOTS = 4
+
+/** Размер иконки внутри значка. */
+private val TECH_ICON_SIZE = 16.dp
+
 /**
- * Значок технологии: компактная «пилюля» с короткой подписью.
- * Цвет берётся по очереди из primary/secondary/tertiary контейнеров,
- * чтобы ряд значков не был монотонным и оставался в теме.
+ * Значок технологии: монохромная иконка (в expanded — ещё и название) на
+ * цветной «пилюле». Иконка окрашивается в цвет темы, поэтому подстраивается
+ * под светлую и тёмную схемы. Цвет назначается самой технологии, а не позиции
+ * в списке, поэтому Kotlin везде окрашен одинаково. Слот выбирается по хешу
+ * имени между primary-, secondary- и tertiary-контейнерами и surfaceVariant —
+ * все остаются в теме.
  */
 @Composable
 fun TechBadge(
     tech: Tech,
-    index: Int,
     modifier: Modifier = Modifier,
     expanded: Boolean = false,
 ) {
     val scheme = MaterialTheme.colorScheme
-    val (container, onContainer) = when (index % 3) {
+    val (container, onContainer) = when (tech.colorSlot()) {
         0 -> scheme.primaryContainer to scheme.onPrimaryContainer
         1 -> scheme.secondaryContainer to scheme.onSecondaryContainer
-        else -> scheme.tertiaryContainer to scheme.onTertiaryContainer
+        2 -> scheme.tertiaryContainer to scheme.onTertiaryContainer
+        else -> scheme.surfaceVariant to scheme.onSurfaceVariant
     }
     Surface(
         shape = RoundedCornerShape(8.dp),
         color = container,
         modifier = modifier,
     ) {
-        Text(
-            text = if (expanded) tech.label else tech.short,
-            style = MaterialTheme.typography.labelSmall,
-            color = onContainer,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(
+                horizontal = if (expanded) 10.dp else 6.dp,
+                vertical = 6.dp,
+            ),
+        ) {
+            Icon(
+                imageVector = tech.icon,
+                contentDescription = if (expanded) null else tech.label,
+                tint = onContainer,
+                modifier = Modifier.size(TECH_ICON_SIZE),
+            )
+            if (expanded) {
+                Spacer(Modifier.width(6.dp))
+                Text(
+                    text = tech.label,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = onContainer,
+                )
+            }
+        }
     }
 }
+
+/** Стабильный цветовой слот технологии: считается по её имени. */
+private fun Tech.colorSlot(): Int = name.hashCode().mod(COLOR_SLOTS)
 
 /** Ряд значков в плитке: не больше [maxVisible], остальное — «+N». */
 @Composable
@@ -56,8 +89,8 @@ fun TechBadgeRow(
         horizontalArrangement = Arrangement.spacedBy(6.dp),
         modifier = modifier,
     ) {
-        techs.take(maxVisible).forEachIndexed { index, tech ->
-            TechBadge(tech = tech, index = index)
+        techs.take(maxVisible).forEach { tech ->
+            TechBadge(tech = tech)
         }
         if (techs.size > maxVisible) {
             Text(
@@ -80,8 +113,30 @@ fun TechChipRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier,
     ) {
-        techs.forEachIndexed { index, tech ->
-            TechBadge(tech = tech, index = index, expanded = true)
+        techs.forEach { tech ->
+            TechBadge(tech = tech, expanded = true)
         }
+    }
+}
+
+@Preview(widthDp = 280, showBackground = true)
+@Composable
+private fun TechBadgeRowPreview() {
+    CvTheme {
+        TechBadgeRow(
+            techs = cvProfile.projects.first().techs,
+            modifier = Modifier.padding(8.dp),
+        )
+    }
+}
+
+@Preview(widthDp = 480, showBackground = true)
+@Composable
+private fun TechChipRowPreview() {
+    CvTheme {
+        TechChipRow(
+            techs = cvProfile.projects.first().techs,
+            modifier = Modifier.padding(8.dp),
+        )
     }
 }

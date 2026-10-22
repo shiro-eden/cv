@@ -1,19 +1,20 @@
 package org.example.cv
 
-/** Технология проекта: `label` — полное имя, `short` — подпись на значке в плитке. */
-enum class Tech(val label: String, val short: String) {
-    KOTLIN("Kotlin", "Kt"),
-    ANDROID("Android", "An"),
-    COMPOSE("Compose", "C"),
-    KMP("KMP", "KM"),
-    PYTHON("Python", "Py"),
-    PYGAME("Pygame", "Pg"),
-    LATEX("LaTeX", "TeX"),
-    GIT("Git", "Git"),
-    GRADLE("Gradle", "Gd"),
-    MVVM("MVVM", "MV"),
-    JUNIT("JUnit", "JU"),
-    XML("XML", "XML"),
+/** Технология проекта: `label` — полное имя, иконка для значка — `Tech.icon`. */
+enum class Tech(val label: String) {
+    KOTLIN("Kotlin"),
+    ANDROID("Android"),
+    COMPOSE("Compose"),
+    KMP("KMP"),
+    PYTHON("Python"),
+    PYGAME("Pygame"),
+    LATEX("LaTeX"),
+    GIT("Git"),
+    GODOT("Godot"),
+    GRADLE("Gradle"),
+    MVVM("MVVM"),
+    JUNIT("JUnit"),
+    XML("XML"),
 }
 
 data class Project(
@@ -31,6 +32,10 @@ data class Project(
 data class EducationEntry(
     val title: String,
     val detail: String,
+    /** Текущий курс; вместе с [totalCourses] рисует прогресс-полосу. */
+    val course: Int? = null,
+    /** Сколько всего курсов в программе. */
+    val totalCourses: Int? = null,
 )
 
 enum class ContactType {
@@ -123,6 +128,38 @@ Devil** на Pygame. Собственный 3D-движок: отрисовка 
 - проект вёлся по этапам — от альфы до защиты с документацией.
 """
 
+private const val README_KOT = """
+# kot-extension
+
+Kotlin/Native биндинги Godot 4 GDExtension: игра пишется на Kotlin и
+компилируется в разделяемую библиотеку, которую Godot загружает через
+манифест `.gdextension`. Классы движка наследуются напрямую, виртуальные
+методы переопределяются как обычные методы Kotlin.
+
+## Что внутри
+
+- KSP-процессор по аннотациям генерирует дескриптор класса, обёртки
+  виртуальных методов и точку входа модуля;
+- `@Export`-свойства видны в инспекторе Godot, `@Signal`-поля дают
+  типизированные `emit`/`connect`/`disconnect`;
+- демо «Кубиколов»: корзинка, падающие кубики и HUD рисуются из Kotlin
+  через `_draw` — ноль GDScript и ни одного ассета.
+"""
+
+private const val README_PROJECT_H = """
+# project_h
+
+Карточная игра-битва на Pygame: ход состоит из фаз выбора карт, проверки
+и сражения — персонажи применяют карты и бьются по очереди.
+
+## Что внутри
+
+- сюжетные вставки-новеллы с портретами персонажей;
+- выбор персонажа перед боем;
+- пауза, настройки и экран результатов;
+- анимированные переходы между экранами.
+"""
+
 private const val README_TEX = """
 # HSE-TeX-Calculus-2
 
@@ -156,15 +193,16 @@ private const val README_MAPS = """
 val cvProfile = CvProfile(
     name = "Жуков Андрей",
     role = "Начинающий Android-разработчик",
-    about = "Студент 1 курса программы «Программная инженерия». Пишу на Kotlin и Python: " +
-        "делаю Android-приложения (от калькуляторов до каталога фильмов) и небольшие игры " +
-        "на Pygame. Сейчас собираю интерактивное резюме на Compose Multiplatform — оно же " +
-        "эта страница. Веду конспекты по математике в LaTeX.",
+    about = "Пишу на Kotlin и Python: Android-приложения и игры на Pygame. " +
+        "Это резюме собрал на Compose Multiplatform. Конспекты по матанализу " +
+        "верстаю в LaTeX.",
     education = listOf(
         // TODO: впишите свой вуз
         EducationEntry(
-            title = "Программная инженерия, 1 курс",
+            title = "Программная инженерия",
             detail = "2026 — 2030",
+            course = 1,
+            totalCourses = 4,
         ),
     ),
     skills = listOf(
@@ -172,8 +210,6 @@ val cvProfile = CvProfile(
         "Compose Multiplatform",
         "Android SDK",
         "MVVM",
-        "ViewModel",
-        "LiveData",
         "Python",
         "Pygame",
         "Git",
@@ -195,6 +231,15 @@ val cvProfile = CvProfile(
                 "Android и веба (wasmJS), Material 3, публикация на GitHub Pages.",
             techs = listOf(Tech.KOTLIN, Tech.COMPOSE, Tech.KMP, Tech.GRADLE),
             readme = README_CV,
+        ),
+        Project(
+            title = "kot-extension",
+            repo = "shiro-eden/kot-extension",
+            year = "2026",
+            summary = "Биндинги Godot 4 для Kotlin/Native: классы движка наследуются " +
+                "напрямую, KSP генерирует обёртки. Демо-игра без единой строчки GDScript.",
+            techs = listOf(Tech.KOTLIN, Tech.GODOT, Tech.GRADLE),
+            readme = README_KOT,
         ),
         Project(
             title = "EducationMovieApp",
@@ -231,6 +276,15 @@ val cvProfile = CvProfile(
                 "Участие в общем проекте конспектов hse-tex.",
             techs = listOf(Tech.LATEX, Tech.GIT),
             readme = README_TEX,
+        ),
+        Project(
+            title = "project_h",
+            repo = "shiro-eden/project_h",
+            year = "2022 — 2023",
+            summary = "Карточная игра-битва на Pygame: фазы выбора карт и сражения, " +
+                "сюжетные вставки-новеллы, выбор персонажа, пауза и настройки.",
+            techs = listOf(Tech.PYTHON, Tech.PYGAME, Tech.GIT),
+            readme = README_PROJECT_H,
         ),
         Project(
             title = "Rizumu",
