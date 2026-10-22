@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -28,17 +29,18 @@ import androidx.compose.ui.unit.dp
 private val WIDE_BREAKPOINT = 720.dp
 
 /**
- * Корень CV: слева профиль (≈1/5 ширины), справа «шторка» проектов.
+ * Корень CV: слева профиль (≈1/4 ширины), справа «шторка» проектов.
  * Поверх всего — оверлеи карточки проекта и настроек.
  */
 @Composable
 fun CvApp(modifier: Modifier = Modifier) {
     var darkThemeOverride by remember { mutableStateOf<Boolean?>(null) }
+    var palette by remember { mutableStateOf(CvPalette.Purple) }
     var selectedProject by remember { mutableStateOf<Project?>(null) }
     var settingsShown by remember { mutableStateOf(false) }
     val darkTheme = darkThemeOverride ?: isSystemInDarkTheme()
 
-    CvTheme(darkTheme = darkTheme) {
+    CvTheme(darkTheme = darkTheme, palette = palette) {
         Surface(
             modifier = modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
@@ -46,7 +48,7 @@ fun CvApp(modifier: Modifier = Modifier) {
             BoxWithConstraints(Modifier.fillMaxSize().padding(24.dp)) {
                 if (maxWidth >= WIDE_BREAKPOINT) {
                     WideLayout(
-                        leftWidth = (maxWidth * 0.22f).coerceIn(280.dp, 380.dp),
+                        leftWidth = (maxWidth * 0.26f).coerceIn(300.dp, 420.dp),
                         onProjectClick = { selectedProject = it },
                         onOpenSettings = { settingsShown = true },
                     )
@@ -65,6 +67,8 @@ fun CvApp(modifier: Modifier = Modifier) {
                     visible = settingsShown,
                     darkTheme = darkTheme,
                     onDarkThemeChange = { darkThemeOverride = it },
+                    palette = palette,
+                    onPaletteChange = { palette = it },
                     onDismiss = { settingsShown = false },
                 )
             }
@@ -72,7 +76,7 @@ fun CvApp(modifier: Modifier = Modifier) {
     }
 }
 
-/** Две панели: левая занимает 1/4–1/5 ширины, правая — всё остальное. */
+/** Две панели: левая занимает около 1/4 ширины, правая — всё остальное. */
 @Composable
 private fun WideLayout(
     leftWidth: Dp,
@@ -107,12 +111,33 @@ private fun NarrowLayout(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        ProfilePanel(profile = cvProfile, modifier = Modifier.fillMaxWidth())
+        ProfilePanel(
+            profile = cvProfile,
+            contentScrollable = false,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        // На телефоне плитки не втискиваются по 4 — одна на страницу, зато
+        // целая страница высоты: текст не приходится обрезать.
         ProjectsPanel(
             projects = cvProfile.projects,
             onProjectClick = onProjectClick,
             onOpenSettings = onOpenSettings,
+            tilesPerPage = 1,
             modifier = Modifier.fillMaxWidth().height(560.dp),
         )
     }
+}
+
+/** Превью широкой раскладки: две панели рядом. */
+@Preview(widthDp = 1280, heightDp = 800)
+@Composable
+private fun CvAppWidePreview() {
+    CvApp()
+}
+
+/** Превью узкой раскладки: панели в колонку. */
+@Preview(widthDp = 480, heightDp = 900)
+@Composable
+private fun CvAppNarrowPreview() {
+    CvApp()
 }
