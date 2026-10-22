@@ -1,5 +1,6 @@
 package org.example.cv
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,27 +10,39 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlin.math.ceil
 import kotlinx.coroutines.launch
 
-/** Плиток на странице: сетка 2×2. */
-private const val TILES_PER_PAGE = 4
+/** Плиток на странице широкой раскладки: сетка 2×2. */
+private const val WIDE_TILES_PER_PAGE = 4
 
 /**
- * Правая панель — «шторка» проектов в духе Android: крупные скруглённые плитки
- * по 4 на странице, перелистывание свайпом/колесом, точки-страницы внизу и
- * шестерёнка настроек в шапке.
+ * Правая панель — «шторка» проектов в духе Android: ряд фильтр-чипов по
+ * технологиям, крупные скруглённые плитки, перелистывание свайпом/колесом,
+ * точки-страницы внизу и шестерёнка настроек в шапке. На широком экране —
+ * сетка 2×2 с горизонтальным перелистыванием, на узком ([tilesPerPage] = 1) —
+ * одна плитка на страницу и вертикальное перелистывание: страница уходит
+ * вверх, следующая приходит снизу.
  */
 @Composable
 fun ProjectsPanel(
@@ -37,10 +50,19 @@ fun ProjectsPanel(
     onProjectClick: (Project) -> Unit,
     onOpenSettings: () -> Unit,
     modifier: Modifier = Modifier,
+    tilesPerPage: Int = WIDE_TILES_PER_PAGE,
 ) {
-    val pageCount = ceil(projects.size / TILES_PER_PAGE.toDouble()).toInt().coerceAtLeast(1)
+    var techFilter by remember { mutableStateOf<Tech?>(null) }
+    val visibleProjects = remember(projects, techFilter) {
+        if (techFilter == null) projects else projects.filter { techFilter in it.techs }
+    }
+    val allTechs = remember(projects) { projects.flatMap { it.techs }.distinct() }
+    val singleTile = tilesPerPage == 1
+    val pageCount = ceil(visibleProjects.size / tilesPerPage.toDouble()).toInt().coerceAtLeast(1)
     val pagerState = rememberPagerState(pageCount = { pageCount })
     val scope = rememberCoroutineScope()
+    // после смены фильтра страниц может стать меньше — возвращаемся на первую
+    LaunchedEffect(techFilter) { pagerState.scrollToPage(0) }
 
     Surface(
         modifier = modifier.fillMaxHeight(),
@@ -54,31 +76,69 @@ fun ProjectsPanel(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             ProjectsHeader(
-                count = projects.size,
+                count = visibleProjects.size,
                 onOpenSettings = onOpenSettings,
             )
+            TechFilterRow(
+                techs = allTechs,
+                selected = techFilter,
+                onSelect = { techFilter = it },
+            )
 
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .shadePagerGestures(pagerState, scope),
-                pageSpacing = 20.dp,
-                userScrollEnabled = false,
-            ) { pageIndex ->
-                ProjectsPage(
-                    projects = projects,
-                    pageIndex = pageIndex,
-                    onProjectClick = onProjectClick,
+            if (singleTile) {
+                Row(Modifier.weight(1f).fillMaxWidth()) {
+                    VerticalPager(
+                        state = pagerState,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .shadePagerGestures(pagerState, scope, vertical = true),
+                        pageSpacing = 20.dp,
+                        userScrollEnabled = false,
+                    ) { pageIndex ->
+                        ProjectsPage(
+                            projects = visibleProjects,
+                            pageIndex = pageIndex,
+                            tilesPerPage = tilesPerPage,
+                            onProjectClick = onProjectClick,
+                        )
+                    }
+                    // Лента точек сбоку: индикатор движется вверх/вниз вместе
+                    // со страницами, а не вразрез с ними.
+                    PageDots(
+                        page = pagerState.currentPage,
+                        pageCount = pageCount,
+                        onPageChange = { index ->
+                            scope.launch { pagerState.animateScrollToPage(index) }
+                        },
+                        modifier = Modifier.fillMaxHeight().padding(start = 10.dp),
+                        vertical = true,
+                    )
+                }
+            } else {
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .shadePagerGestures(pagerState, scope),
+                    pageSpacing = 20.dp,
+                    userScrollEnabled = false,
+                ) { pageIndex ->
+                    ProjectsPage(
+                        projects = visibleProjects,
+                        pageIndex = pageIndex,
+                        tilesPerPage = tilesPerPage,
+                        onProjectClick = onProjectClick,
+                    )
+                }
+
+                PageDots(
+                    page = pagerState.currentPage,
+                    pageCount = pageCount,
+                    onPageChange = { index -> scope.launch { pagerState.animateScrollToPage(index) } },
                 )
             }
-
-            PageDots(
-                page = pagerState.currentPage,
-                pageCount = pageCount,
-                onPageChange = { index -> scope.launch { pagerState.animateScrollToPage(index) } },
-            )
         }
     }
 }
@@ -120,14 +180,52 @@ private fun ProjectsHeader(
     }
 }
 
-/** Одна страница пейджера: до 4 плиток в сетке 2×2; пустые слоты сохраняют сетку. */
+/** Ряд фильтр-чипов по технологиям: «Все» плюс по чипу на технологию. */
+@Composable
+private fun TechFilterRow(
+    techs: List<Tech>,
+    selected: Tech?,
+    onSelect: (Tech?) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        FilterChip(
+            selected = selected == null,
+            onClick = { onSelect(null) },
+            label = { Text("Все") },
+        )
+        techs.forEach { tech ->
+            FilterChip(
+                selected = selected == tech,
+                onClick = { onSelect(if (selected == tech) null else tech) },
+                label = { Text(tech.label) },
+            )
+        }
+    }
+}
+
+/** Одна страница пейджера: сетка 2×2 или одна плитка на весь лист. */
 @Composable
 private fun ProjectsPage(
     projects: List<Project>,
     pageIndex: Int,
+    tilesPerPage: Int,
     onProjectClick: (Project) -> Unit,
 ) {
-    val pageProjects = projects.drop(pageIndex * TILES_PER_PAGE).take(TILES_PER_PAGE)
+    if (tilesPerPage == 1) {
+        ProjectTile(
+            project = projects[pageIndex],
+            onClick = { onProjectClick(projects[pageIndex]) },
+            summaryMaxLines = Int.MAX_VALUE,
+            modifier = Modifier.fillMaxSize(),
+        )
+        return
+    }
+    val pageProjects = projects.drop(pageIndex * tilesPerPage).take(tilesPerPage)
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(20.dp),
@@ -153,5 +251,18 @@ private fun ProjectsPage(
                 }
             }
         }
+    }
+}
+
+@Preview(widthDp = 800, heightDp = 800, showBackground = true)
+@Composable
+private fun ProjectsPanelPreview() {
+    CvTheme {
+        ProjectsPanel(
+            projects = cvProfile.projects,
+            onProjectClick = {},
+            onOpenSettings = {},
+            modifier = Modifier.padding(16.dp),
+        )
     }
 }

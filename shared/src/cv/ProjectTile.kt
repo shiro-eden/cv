@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 /** Цвет плитки: обычный и подсвеченный при наведении курсора. */
@@ -45,12 +46,16 @@ private fun tileColor(hovered: Boolean) = if (hovered) {
 /**
  * Плитка проекта: название, краткое описание, значки технологий.
  * У clicа — пружинное сжатие, как у плиток шторки.
+ *
+ * @param summaryMaxLines сколько строк описания показывать; на странице,
+ * где плитка одна, места хватает и ограничение снимают.
  */
 @Composable
 fun ProjectTile(
     project: Project,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    summaryMaxLines: Int = 5,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
@@ -127,11 +132,23 @@ fun ProjectTile(
                 text = project.summary,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 5,
+                maxLines = summaryMaxLines,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
             )
             TechBadgeRow(techs = project.techs)
         }
+    }
+}
+
+@Preview(widthDp = 420, heightDp = 300, showBackground = true)
+@Composable
+private fun ProjectTilePreview() {
+    CvTheme {
+        ProjectTile(
+            project = cvProfile.projects.first(),
+            onClick = {},
+            modifier = Modifier.padding(16.dp),
+        )
     }
 }
