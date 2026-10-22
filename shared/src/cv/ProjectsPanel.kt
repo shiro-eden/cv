@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -114,7 +112,7 @@ private fun ProjectsHeader(
         // Функционал настроек будет доделан отдельным запуском.
         IconButton(onClick = onOpenSettings) {
             Icon(
-                imageVector = Icons.Filled.Settings,
+                imageVector = CvIcons.Settings,
                 contentDescription = "Настройки",
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )

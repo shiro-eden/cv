@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import org.example.cv.resources.Res
+import org.example.cv.resources.avatar
 import org.jetbrains.compose.resources.painterResource
 
 /**

@@ -19,8 +19,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -184,7 +182,7 @@ private fun ContactsSection(contacts: List<Contact>) {
 }
 
 fun ContactType.icon(): ImageVector = when (this) {
-    ContactType.EMAIL -> Icons.Filled.Email
+    ContactType.EMAIL -> CvIcons.Email
     ContactType.TELEGRAM -> CvIcons.Telegram
     ContactType.GITHUB -> CvIcons.GitHub
 }
