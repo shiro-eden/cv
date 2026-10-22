@@ -175,8 +175,8 @@ val myCv = Cv(
             summary = "Поиск адресов и сохранение снимков карты через Yandex Maps API.",
         ),
     ),
-    email = "you@example.com",      // [ВПИСАТЬ]
-    telegram = "@shiro_eden",       // [ВПИСАТЬ]
+    email = "aazhukov_15@edu.hse.ru",
+    telegram = "@shiro_eden",       
     github = "github.com/shiro-eden",
 )
 ```

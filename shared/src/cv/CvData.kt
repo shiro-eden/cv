@@ -216,9 +216,7 @@ val cvProfile = CvProfile(
         "LaTeX",
     ),
     contacts = listOf(
-        // TODO: впишите свою почту
-        Contact(ContactType.EMAIL, "you@example.com", "mailto:you@example.com"),
-        // TODO: впишите свой Telegram
+        Contact(ContactType.EMAIL, "aazhukov_15@edu.hse.ru", "mailto:aazhukov_15@edu.hse.ru"),
         Contact(ContactType.TELEGRAM, "@shiro_eden", "https://t.me/shiro_eden"),
         Contact(ContactType.GITHUB, "github.com/shiro-eden", "https://github.com/shiro-eden"),
     ),
