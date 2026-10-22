@@ -24,8 +24,13 @@
 ./kotlin build -m webApp -v release
 ```
 
-Статические файлы появятся в `build/artifacts/CompiledWebArtifact/webAppwasmJsrelease/` —
-их содержимое выкладывается на GitHub Pages.
+Готовый статический сайт (обработанный `index.html` + `webApp.wasm` + ресурсы):
+`build/tasks/_webApp_buildWasmJsAppWasmJsRelease/` — его содержимое выкладывается
+на GitHub Pages.
+
+В репозитории есть готовый workflow `.github/workflows/pages.yml`: при пуше в
+`main` сайт собирается и публикуется на GitHub Pages (включите
+Settings → Pages → Source: GitHub Actions).
 
 ## Данные резюме
 
