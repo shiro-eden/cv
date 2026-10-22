@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-/** Сколько цветовых «слотов» чередуется между значками. */
+/** Сколько цветовых "слотов" чередуется между значками. */
 private const val COLOR_SLOTS = 4
 
 /** Размер иконки внутри значка. */
@@ -25,7 +25,7 @@ private val TECH_ICON_SIZE = 16.dp
 
 /**
  * Значок технологии: монохромная иконка (в expanded — ещё и название) на
- * цветной «пилюле». Иконка окрашивается в цвет темы, поэтому подстраивается
+ * цветной "пилюле". Иконка окрашивается в цвет темы, поэтому подстраивается
  * под светлую и тёмную схемы. Цвет назначается самой технологии, а не позиции
  * в списке, поэтому Kotlin везде окрашен одинаково. Слот выбирается по хешу
  * имени между primary-, secondary- и tertiary-контейнерами и surfaceVariant —
@@ -77,7 +77,7 @@ fun TechBadge(
 /** Стабильный цветовой слот технологии: считается по её имени. */
 private fun Tech.colorSlot(): Int = name.hashCode().mod(COLOR_SLOTS)
 
-/** Ряд значков в плитке: не больше [maxVisible], остальное — «+N». */
+/** Ряд значков в плитке: не больше [maxVisible], остальное — "+N". */
 @Composable
 fun TechBadgeRow(
     techs: List<Tech>,

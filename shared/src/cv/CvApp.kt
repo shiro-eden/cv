@@ -25,11 +25,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-/** Порог «широкого» экрана, на котором хватает места на две панели. */
+/** Порог "широкого" экрана, на котором хватает места на две панели. */
 private val WIDE_BREAKPOINT = 720.dp
 
 /**
- * Корень CV: слева профиль (≈1/4 ширины), справа «шторка» проектов.
+ * Корень CV: слева профиль (≈1/4 ширины), справа "шторка" проектов.
  * Поверх всего — оверлеи карточки проекта и настроек.
  */
 @Composable

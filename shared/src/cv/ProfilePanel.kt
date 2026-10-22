@@ -131,7 +131,7 @@ private fun ProfileHeader(profile: CvProfile) {
 }
 
 /**
- * Контакты как в приложении «Контакты»: кнопка «Почта» и круглые tonal-кнопки
+ * Контакты как в приложении "Контакты": кнопка "Почта" и круглые tonal-кнопки
  * мессенджеров и соцсетей вместо длинного списка.
  */
 @Composable
@@ -243,7 +243,7 @@ private fun EducationSection(entries: List<EducationEntry>) {
 }
 
 /**
- * Прогресс-полоса-«змейка» из Expressive-слайдеров: заполненная часть —
+ * Прогресс-полоса-"змейка" из Expressive-слайдеров: заполненная часть —
  * бегущая волна, дальше — затухшая прямая, в конце дорожки — точка-ограничитель
  * как в прогрессах Material 3. Стык волны и хвоста закрывает бегунок — узкая
  * вертикальная пилюля с зазорами с обеих сторон.
@@ -311,7 +311,7 @@ private fun SnakeProgress(fraction: Float, modifier: Modifier = Modifier) {
                     x = next
                 }
                 clipRect(0f, 0f, waveEnd, size.height) {
-                    translate(left = -shift) { // волна «вытекает» влево
+                    translate(left = -shift) { // волна "вытекает" влево
                         drawPath(
                             path,
                             color = waveColor,
@@ -344,7 +344,7 @@ private fun SkillsSection(skills: List<String>) {
     }
 }
 
-/** Небольшая «пилюля» навыка в secondary-контейнере. */
+/** Небольшая "пилюля" навыка в secondary-контейнере. */
 @Composable
 private fun SkillChip(label: String) {
     Surface(

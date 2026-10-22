@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 
 /**
- * Углы чуть крупнее базовых — «Expressive»: крупные панели скруглены на 32dp,
+ * Углы чуть крупнее базовых — "Expressive": крупные панели скруглены на 32dp,
  * плитки и карточки берут из схемы свои уровни.
  */
 private val CvShapes = Shapes(

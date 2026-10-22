@@ -46,7 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 /**
- * Оверлей настроек: тёмная тема и цветовая схема — «основные цвета» в духе
+ * Оверлей настроек: тёмная тема и цветовая схема — "основные цвета" в духе
  * Android. Шестерёнка на месте, выбор палитры применяется сразу ко всему CV.
  */
 @Composable
@@ -167,7 +167,7 @@ private fun SettingsCard(
     }
 }
 
-/** Кружки выбора цветовой схемы — как «основные цвета» в Android. */
+/** Кружки выбора цветовой схемы — как "основные цвета" в Android. */
 @Composable
 private fun PaletteRow(
     palette: CvPalette,
@@ -241,7 +241,7 @@ private fun PaletteCircle(
         if (selected) {
             Icon(
                 imageVector = CvIcons.Check,
-                contentDescription = "Выбрана схема «${palette.label}»",
+                contentDescription = "Выбрана схема \"${palette.label}\"",
                 tint = palette.onSwatch,
                 modifier = Modifier.size(20.dp),
             )

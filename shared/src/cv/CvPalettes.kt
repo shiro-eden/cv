@@ -6,7 +6,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 /**
- * Цветовые схемы «основных цветов» в духе Android: по одной на кружок в
+ * Цветовые схемы "основных цветов" в духе Android: по одной на кружок в
  * настройках. Каждая схема собрана из тональных палитр HCT, как в
  * material-color-utilities: primary (chroma 48), secondary (16), tertiary
  * (hue + 60°, chroma 24), neutral (4) и neutralVariant (8).
@@ -489,7 +489,7 @@ data class CvPaletteSpec(
 )
 
 /**
- * Палитра CV: одна из схем «основных цветов». По умолчанию — фиолетовая.
+ * Палитра CV: одна из схем "основных цветов". По умолчанию — фиолетовая.
  */
 enum class CvPalette(private val spec: CvPaletteSpec, val label: String) {
     /** Фиолетовая. */

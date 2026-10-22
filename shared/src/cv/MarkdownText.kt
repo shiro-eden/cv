@@ -104,7 +104,7 @@ private fun inlineMarkdown(text: String, styles: InlineStyles): AnnotatedString 
 
 /**
  * Мини-рендер Markdown, ровно столько, сколько нужно README проектов:
- * заголовки #/##/###, абзацы, списки «- », блоки кода ``` и инлайн-разметка.
+ * заголовки #/##/###, абзацы, списки "- ", блоки кода ``` и инлайн-разметка.
  */
 @Composable
 fun MarkdownText(markdown: String, modifier: Modifier = Modifier) {
