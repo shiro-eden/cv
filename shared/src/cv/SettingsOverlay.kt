@@ -76,7 +76,10 @@ fun SettingsOverlay(
                 animationSpec = tween(180),
             ) + fadeOut(tween(150)),
         ) {
-            Box(contentAlignment = Alignment.Center) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
                 SettingsCard(
                     darkTheme = darkTheme,
                     onDarkThemeChange = onDarkThemeChange,

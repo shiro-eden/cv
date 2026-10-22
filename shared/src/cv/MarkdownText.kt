@@ -136,7 +136,22 @@ fun MarkdownText(markdown: String, modifier: Modifier = Modifier) {
                     ListItem(line.substring(2))
                 }
                 line.isBlank() -> Unit
-                else -> Paragraph(line)
+                else -> {
+                    // Подряд идущие строки — один абзац (как в Markdown)
+                    val paragraph = StringBuilder(line)
+                    while (
+                        index + 1 < lines.size &&
+                        lines[index + 1].isNotBlank() &&
+                        !lines[index + 1].trimStart().startsWith("```") &&
+                        !lines[index + 1].startsWith("#") &&
+                        !lines[index + 1].startsWith("- ") &&
+                        !lines[index + 1].startsWith("* ")
+                    ) {
+                        index++
+                        paragraph.append(' ').append(lines[index])
+                    }
+                    Paragraph(paragraph.toString())
+                }
             }
             index++
         }
