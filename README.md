@@ -7,9 +7,8 @@
 
 - `shared/` — весь UI резюме (Compose), компоненты разложены по файлам в `shared/src/cv/`
 - `webApp/` — точка входа для веба (`ComposeViewport`) и HTML-обвязка
-- `shared/composeResources/drawable/avatar.svg` — фото-заглушка, замените на свою фотографию
-  с GitHub (можно положить `avatar.png` и поменять `Res.drawable.avatar` на `Res.drawable.avatar_png`
-  в `ProfilePhoto.kt`)
+- `shared/composeResources/drawable/avatar.png` — фото-заглушка, просто замените этот файл
+  своей фотографией с GitHub
 
 ## Запуск
 

@@ -11,9 +11,9 @@ import org.example.cv.resources.avatar
 import org.jetbrains.compose.resources.painterResource
 
 /**
- * Фото профиля. Сейчас — заглушка `avatar.svg`; положите свою фотографию в
- * `shared/composeResources/drawable/` (например `avatar.png`) и поменяйте
- * `Res.drawable.avatar` на `Res.drawable.avatar_png`.
+ * Фото профиля. Сейчас — заглушка `avatar.png`; просто замените этот файл в
+ * `shared/composeResources/drawable/` своей фотографией с GitHub (или положите
+ * файл с другим именем и поменяйте `Res.drawable.avatar` на новый аксессуар).
  */
 @Composable
 fun ProfilePhoto(modifier: Modifier = Modifier) {
